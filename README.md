@@ -4,7 +4,7 @@ I work from the office and from home, and I switch multiple times in a week. In 
 
 There are various [Slack status update scripts](https://github.com/mivok/slack_status_updater/blob/master/slack_status.sh) to be found online. These are usually a Bash script and provide a command line interface. This is nice, but I want to integrate it with the NetworkManager and also want to make it configurable with a configuration file. On top of that, it seemed like a nice hack project, so I implemented this in Python. Also I have stuck to the Python standard library and not used any external dependencies. This way it is as easy to deploy as I can think of.
 
-It uses the [users.profile.set](https://api.slack.com/methods/users.profile.set) API method of Slack.
+It uses the [users.profile.set](https://api.slack.com/methods/users.profile.set) API method of Slack, so you need to create a Slack application that is allowed to access that. See the [documentation of `slack_status_updater`](https://github.com/mivok/slack_status_updater) for a guide.
 
 
 ## Configuration
@@ -12,15 +12,15 @@ It uses the [users.profile.set](https://api.slack.com/methods/users.profile.set)
 Create the following configuration file at `~/.config/slack-wlan-status-updater/config.toml`:
 
 ```toml
-[slack.work]
-token = "…"
+[slack.Work]
+token = "xoxp-…"
 
-[environments.home]
+[environments.Home]
 network = "…"
 emoji = "haus"
 text = "Working from home"
 
-[environments.office]
+[environments.Office]
 network = "…"
 emoji = "köln"
 text = "Office Cologne"

@@ -5,6 +5,9 @@ description = "Update Slack status based on WLAN network"
 authors = ["Martin Ueding <mu@martin-ueding.de>"]
 license = "MIT"
 
+[tool.poetry.scripts]
+slack-wlan-status-updater = "slack_wlan_status_updater.__main__:main"
+
 [tool.poetry.dependencies]
 python = "^3.11"
 
