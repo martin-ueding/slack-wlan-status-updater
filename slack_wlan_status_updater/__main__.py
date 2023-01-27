@@ -36,7 +36,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--poll-minutes",
-        type=int,
+        type=float,
         default=5,
         help="Poll interval in minutes. Default: %(default)d",
     )
