@@ -3,13 +3,35 @@ import datetime
 import json
 import pathlib
 import subprocess
+import time
 import tomllib
 import urllib.request
 
 
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--poll-minutes", type=int, default=5, help="Poll interval in minutes. Default: %(default)d")
+    options = parser.parse_args()
+
+    config = get_config()
+    while True:
+        check_and_update_status(config)
+        time.sleep(options.poll_minutes * 60)
+
+
+def check_and_update_status(config: dict) -> None:
+    active_connections = get_active_connections()
+    for environment_name, environment in config["environments"].items():
+        if environment["network"] in active_connections:
+            for slack_name, slack in config["slack"].items():
+                print(f"Setting status according to environment “{environment_name}” for Slack workspace “{slack_name}”.")
+                set_status(environment["emoji"], environment["text"], slack["token"])
+            break
+
+
 def get_config() -> dict:
-    raw_path = "~/.config/slack-wlan-status-updater/config.toml"
-    config_path = pathlib.Path(raw_path).expanduser()
+    raw_config_path = "~/.config/slack-wlan-status-updater/config.toml"
+    config_path = pathlib.Path(raw_config_path).expanduser()
     with open(config_path, 'rb') as f:
         config = tomllib.load(f)
     return config
@@ -33,20 +55,6 @@ def get_active_connections() -> str:
     )
     output = result.stdout.decode()
     return output
-
-
-def main() -> None:
-    parser = argparse.ArgumentParser()
-    options = parser.parse_args()
-
-    config = get_config()
-    active_connections = get_active_connections()
-    for environment_name, environment in config["environments"].items():
-        if environment["network"] in active_connections:
-            for slack_name, slack in config["slack"].items():
-                print(f"Setting status according to environment “{environment_name}” for Slack workspace “{slack_name}”.")
-                set_status(environment["emoji"], environment["text"], slack["token"])
-            break
 
 
 if __name__ == "__main__":
