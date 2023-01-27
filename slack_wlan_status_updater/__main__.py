@@ -24,12 +24,16 @@ class MainLoop:
 
     def run(self) -> None:
         while True:
-            emoji, text = self._status_selector.select_status()
-            expiration = datetime.datetime.combine(
-                datetime.date.today(), datetime.time(23, 59, 59)
-            )
-            self._status_setter.set_status(emoji, text, expiration)
-            time.sleep(self._poll_minutes * 60)
+            status = self._status_selector.select_status()
+            if status is None:
+                time.sleep(60)
+            else:
+                emoji, text = status
+                expiration = datetime.datetime.combine(
+                    datetime.date.today(), datetime.time(23, 59, 59)
+                )
+                self._status_setter.set_status(emoji, text, expiration)
+                time.sleep(self._poll_minutes * 60)
 
 
 def main() -> None:

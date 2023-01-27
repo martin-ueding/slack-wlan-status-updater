@@ -1,5 +1,6 @@
 import collections
 import subprocess
+from typing import Optional
 
 Status = collections.namedtuple("Status", ["emoji", "text"])
 
@@ -8,7 +9,7 @@ class StatusSelector:
     def __init__(self, environments):
         self._environments = environments
 
-    def select_status(self) -> Status:
+    def select_status(self) -> Optional[Status]:
         active_connections = _get_active_connections()
         for environment_name, environment in self._environments.items():
             if environment["network"] in active_connections:
