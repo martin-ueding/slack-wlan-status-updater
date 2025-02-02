@@ -27,7 +27,7 @@ class SlackStatusSetter(StatusSetter):
         }
         url = "https://slack.com/api/users.profile.set"
         headers = {
-            "Content-type": "application/json",
+            "Content-type": "application/json; charset=utf-8",
             "Authorization": f"Bearer {self._token}",
         }
         request = urllib.request.Request(
